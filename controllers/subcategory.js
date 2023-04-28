@@ -57,6 +57,35 @@ const getSubcategoryOfCategory = async (req, res) => {
   res.status(200).json(subcategories)
 }
 
+const getProductsOfSubcategories = async (req, res) => {
+  const subcategory = await Subcategory.find({});
+  const subcategoryProducts = await Promise.all(
+    subcategory.map(async (subcategory) => {
+      return {
+        title: subcategory.name,
+        products: await Promise.all(
+          subcategory.productList.map((product) => {
+            return Product.findById(product);
+          })
+        ),
+      };
+    })
+  );
+  res.status(200).json(subcategoryProducts);
+};
+
+const getProductsOfSubcategory = async (req, res) => {
+  const {id} = req.params;
+  const subcategory = await Subcategory.findById(id);
+  const products = await Promise.all(
+    subcategory.productList.map((product) => {
+      return Product.findById(product);
+    })
+  )
+
+  res.status(200).json({name: subcategory.name,products: products});
+}
+
 module.exports = {
   getAllSubcategories,
   createSubcategory,
@@ -64,4 +93,6 @@ module.exports = {
   updateSubcategory,
   getSubcategoryOfCategory,
   deleteSubcategory,
+  getProductsOfSubcategories,
+  getProductsOfSubcategory,
 };

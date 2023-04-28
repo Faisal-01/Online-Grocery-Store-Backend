@@ -23,9 +23,11 @@ const {
   getProduct,
   updateProduct,
   deleteProduct,
+  deleteAllProduct,
   getFeaturedProducts,
   getTopSellerProducts,
   getCustomProducts,
+  
 } = require("../controllers/products");
 
 router.get("/", getAllProducts);
@@ -33,6 +35,8 @@ router.post("/", createProduct);
 router.get("/featured", getFeaturedProducts);
 router.get("/topseller", getTopSellerProducts);
 router.get("/customcategories", getCustomProducts);
+
+router.delete("/all", deleteAllProduct);
 router.get("/:id", getProduct);
 router.patch("/:id", updateProduct);
 router.delete("/:id", deleteProduct);

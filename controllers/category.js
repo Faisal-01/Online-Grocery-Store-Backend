@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const Product = require("../models/Product");
+const Subcategory = require("../models/Subcategory")
 
 const getAllCategories = async (req, res) => {
   const Categories = await Category.find({});
@@ -45,10 +46,43 @@ const deleteCategory = async (req, res) => {
   }
 };
 
+const subcategoriesOfCategories = async (req, res) => {
+  const categories = await Category.find({});
+  const categoryProducts = await Promise.all(
+    categories.map(async (category) => {
+
+      return {
+        title: category.name,
+        subcategories: await Promise.all(
+          category.subCategoryList.map((subcategory) => {
+            return Subcategory.findById(subcategory)
+          })
+        ),
+      };
+    })
+  );
+
+  res.status(200).json(categoryProducts)
+}
+
+const getProductsOfCategory = async (req, res) => {
+  const { id } = req.params;
+  const category = await Category.findById(id);
+  const products = await Promise.all(
+    category.productList.map((product) => {
+      return Product.findById(product);
+    })
+  );
+
+  res.status(200).json({ name: category.name, products: products });
+};
+
 module.exports = {
   getAllCategories,
   createCategory,
   getCategory,
   updateCategory,
   deleteCategory,
+  subcategoriesOfCategories,
+  getProductsOfCategory,
 };
