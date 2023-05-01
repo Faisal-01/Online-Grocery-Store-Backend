@@ -168,6 +168,42 @@ const getCustomProducts = async (req, res) => {
   res.status(200).json(categoriesProducts);
 };
 
+const similarProducts = async (req, res) => {
+  const {id} = req.params;
+  const product = await Product.findById(id);
+  const subcategory = await Subcategory.findById(product.subcategory);
+  let products = await Promise.all(subcategory.productList.map((product) => {
+    if(product != id)
+    {
+      return Product.findById(product)
+    }
+  }))
+
+  products = products.filter(product => product !== undefined);
+
+  res.status(200).json({subcategory: subcategory.name, products: products});
+
+}
+
+const searchProduct = async (req, res) => {
+  const {query} = req.params;
+  const products = await Product.find({name: {$regex: query, $options: 'i'}})
+  res.status(200).json({query: query, products: products});
+
+}
+
+const getProductsMultiple = async (req, res) => {
+  const {items} = req.body;
+
+  const products = await Promise.all(
+    items.map((item) => {
+      return Product.findById(item);
+    })
+  )
+
+  res.status(200).json(products);
+}
+
 module.exports = {
   getAllProducts,
   createProduct,
@@ -178,4 +214,7 @@ module.exports = {
   getFeaturedProducts,
   getTopSellerProducts,
   getCustomProducts,
+  similarProducts,
+  searchProduct,
+  getProductsMultiple,
 };

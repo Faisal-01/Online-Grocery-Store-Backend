@@ -27,7 +27,9 @@ const {
   getFeaturedProducts,
   getTopSellerProducts,
   getCustomProducts,
-  
+  similarProducts,
+  searchProduct,
+  getProductsMultiple,
 } = require("../controllers/products");
 
 router.get("/", getAllProducts);
@@ -35,6 +37,9 @@ router.post("/", createProduct);
 router.get("/featured", getFeaturedProducts);
 router.get("/topseller", getTopSellerProducts);
 router.get("/customcategories", getCustomProducts);
+router.get("/similarproducts/:id", similarProducts);
+router.get("/search/:query", searchProduct)
+router.post("/multiple", getProductsMultiple);
 
 router.delete("/all", deleteAllProduct);
 router.get("/:id", getProduct);
