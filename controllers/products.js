@@ -1,29 +1,3 @@
-// const Product = require('../models/Product');
-// const data = require('../data');
-
-// // const createDatabaseOfProducts = async (req, res) => {
-// //     // await Product.insertMany(data);
-// //     // console.log(data);
-// //     await Product.deleteMany({});
-// //     const products = await Product.insertMany(data);
-// //     res.send(products);
-// // }
-
-// const getAllProducts = async (req, res) => {
-//     const products = await Product.find({});
-//     res.json(products);
-// }
-
-// const getProducts = async (req, res) => {
-//     const categories = await Product.find({}).distinct('product');
-//     categories.map((product) => {
-//         return {
-//             image: ``
-//         }
-//     })
-//     res.status(200).json(categories);
-// }
-
 const Product = require("../models/Product");
 const data = require("../data");
 const Category = require("../models/Category");

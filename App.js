@@ -5,6 +5,9 @@ const app = express();
 const productsRouter = require("./routes/products");
 const categoryRouter = require("./routes/category");
 const subcategoryRouter = require("./routes/subcategory");
+const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
+const orderRouter = require("./routes/order");
 const connectDB = require("./db/database");
 const path = require("path");
 
@@ -27,6 +30,9 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use('/api/v1/products', productsRouter)
 app.use('/api/v1/category', categoryRouter)
 app.use("/api/v1/subcategory", subcategoryRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/order", orderRouter);
 
 app.use(notFound);
 app.use(error)

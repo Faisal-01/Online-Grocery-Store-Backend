@@ -52,7 +52,8 @@ const subcategoriesOfCategories = async (req, res) => {
     categories.map(async (category) => {
 
       return {
-        title: category.name,
+        _id: category._id,
+        name: category.name,
         subcategories: await Promise.all(
           category.subCategoryList.map((subcategory) => {
             return Subcategory.findById(subcategory)
@@ -76,6 +77,7 @@ const getProductsOfCategory = async (req, res) => {
 
   res.status(200).json({ name: category.name, products: products });
 };
+
 
 module.exports = {
   getAllCategories,
