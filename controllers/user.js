@@ -31,19 +31,21 @@ const getUserFromToken = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.params;
-    const {firstName, lastName, password} = req.body;
+    const {firstName, lastName, password, phoneNumber} = req.body.user;
+    console.log(req.body)
     if(password)
     {
         const salt = await bcrypt.genSalt(10);
         const hashpassword = await bcrypt.hash(password, salt);
-        const user = await User.findByIdAndUpdate(id, {$set: {firstName: firstName, lastName: lastName, password: hashpassword}})
+        const user = await User.findByIdAndUpdate(id, {$set: {firstName: firstName, lastName: lastName, password: hashpassword, phone_number: phoneNumber}})
         res.status(200).json(user);
     }
     else{
         const user = await User.findByIdAndUpdate(id, {
           $set: {
             firstName: firstName,
-            lastName: lastName
+            lastName: lastName,
+            phone_number: phoneNumber,
           },
         });
         res.status(200).json(user);
