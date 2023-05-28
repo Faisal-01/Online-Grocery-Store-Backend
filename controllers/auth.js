@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const login = async (req, res) => {
-  try {
 
     const {email, password} = req.body;
     if(!email || !password){
@@ -23,25 +22,20 @@ const login = async (req, res) => {
       return;
     };
 
-    res.status(200).json(user);
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '30d'})
 
-  } catch (error) {
-    res.status(500).json({mesg: error});
-  }
+    res.status(200).json({token: token});
+
 };
 
 const register = async (req, res) => {
-  try {
 
     const salt = await bcrypt.genSalt(10);
-    const hashpassword = await bcrypt.hash(req.body.password, salt);
-    req.body.password = hashpassword;
-
-    const user = await User.create(req.body);
+    const hashpassword = await bcrypt.hash(req.body.user.password, salt);
+    req.body.user.password = hashpassword;
+    const user = await User.create(req.body.user);
     res.status(200).json("User Registered Succesfully");
-  } catch (error) {
-    res.status(500).json({ mesg: error });
-  }
+
 };
 
 module.exports = {login, register};

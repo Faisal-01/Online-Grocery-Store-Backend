@@ -3,28 +3,50 @@ const mongoose = require("mongoose");
 const OrderSchema = new mongoose.Schema(
   {
     orderBy: {
-      type: 
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
 
     orderStatus: {
-        type: String,
-        enum: ['Active', 'Delivered', 'Cancelled'],
-        default: "Active"
+      type: String,
+      enum: ["Active", "Delivered", "Cancelled"],
+      default: "Active",
     },
 
-    productList: {
-      type: 
-        {
+    orderAmount: {
+      type: Number,
+      required: true,
+    },
+
+    shippingAddress: {
+      type: String,
+      required: true,
+    },
+
+    productList: [
+      {
+        productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
-      
-    },
+
+        productPrice: {
+          type: Number,
+          required: true,
+        },
+
+        productDiscount: {
+          type: Number,
+        },
+
+        productQuantity: {
+          type: Number,
+          required: true,
+        }
+      },
+    ],
+    // required: true,
   },
   { timestamps: true }
 );

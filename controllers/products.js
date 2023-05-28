@@ -169,11 +169,18 @@ const searchProduct = async (req, res) => {
 const getProductsMultiple = async (req, res) => {
   const {items} = req.body;
 
-  const products = await Promise.all(
+  let products = await Promise.all(
     items.map((item) => {
       return Product.findById(item);
     })
   )
+
+  products = products.map(product => {
+    return {
+      product: product,
+      quantity: 1
+    }
+  })
 
   res.status(200).json(products);
 }

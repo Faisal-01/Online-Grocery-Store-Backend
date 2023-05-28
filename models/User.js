@@ -31,10 +31,10 @@ const UserSchema = new mongoose.Schema({
   },
 
   orderList: {
-    type: {
+    type: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
-    },
+    }],
   },
 });
 

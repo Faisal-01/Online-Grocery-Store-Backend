@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const getAllUsers = async (req, res) => {
     const users = await User.find({});
@@ -9,6 +11,22 @@ const getUser = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id);
     res.status(200).json(user);
+}
+
+const getUserFromToken = async (req, res) => {
+    const header = req.headers.authorization;
+    if(!header || !header.startsWith("Bearer "))
+    {
+        console.log(header.startsWith("Bearer "))
+        res.status(401).json("Not Authorized")
+        return
+    }
+    else{
+        const token = header.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id)
+        res.status(200).send({id: user._id, firstName: user.firstName,  lastName: user.lastName, email: user.email, phoneNumber: user.phone_number});
+    }
 }
 
 const updateUser = async (req, res) => {
@@ -40,4 +58,10 @@ const deleteUser = async (req, res) => {
 }
 
 
-module.exports = {getAllUsers, getUser, updateUser, deleteUser}
+module.exports = {
+  getAllUsers,
+  getUser,
+  getUserFromToken, 
+  updateUser,
+  deleteUser,
+};
