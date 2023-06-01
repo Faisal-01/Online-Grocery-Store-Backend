@@ -8,8 +8,10 @@ const subcategoryRouter = require("./routes/subcategory");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const orderRouter = require("./routes/order");
+const requestedProductRouter = require("./routes/requestedProduct");
 const connectDB = require("./db/database");
 const path = require("path");
+const multer = require("multer");
 
 const cors = require("cors");
 const notFound = require('./notFound');
@@ -33,6 +35,7 @@ app.use("/api/v1/subcategory", subcategoryRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/order", orderRouter);
+app.use("/api/v1/request", requestedProductRouter);
 
 app.use(notFound);
 app.use(error)

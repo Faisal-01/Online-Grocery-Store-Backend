@@ -17,7 +17,7 @@ const getUserFromToken = async (req, res) => {
     const header = req.headers.authorization;
     if(!header || !header.startsWith("Bearer "))
     {
-        console.log(header.startsWith("Bearer "))
+       
         res.status(401).json("Not Authorized")
         return
     }
@@ -32,7 +32,6 @@ const getUserFromToken = async (req, res) => {
 const updateUser = async (req, res) => {
     const { id } = req.params;
     const {firstName, lastName, password, phoneNumber} = req.body.user;
-    console.log(req.body)
     if(password)
     {
         const salt = await bcrypt.genSalt(10);
