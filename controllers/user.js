@@ -55,7 +55,21 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     const { id } = req.params;
     await User.findByIdAndDelete(id);
-    res.status(200).json({message: 'User deleted'});
+    res.status(200).json({message: 'User deleted Successfully'});
+}
+
+const searchUser = async (req, res) => {
+    const {search} = req.body;
+    const result = await User.find({
+      $or: [
+        { firstName: { $regex: search, $options: "i" } }, // Case-insensitive search on field1
+        { lastName: { $regex: search, $options: "i" } }, // Case-insensitive search on field2
+        { email: { $regex: search, $options: "i" } }, // Case-insensitive search on field3
+        // Add more fields as needed
+      ],
+    });
+
+    res.status(200).json(result);
 }
 
 
@@ -65,4 +79,5 @@ module.exports = {
   getUserFromToken, 
   updateUser,
   deleteUser,
+  searchUser
 };
