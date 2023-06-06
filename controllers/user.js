@@ -25,7 +25,7 @@ const getUserFromToken = async (req, res) => {
         const token = header.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(decoded.id)
-        res.status(200).send({id: user._id, firstName: user.firstName,  lastName: user.lastName, email: user.email, phoneNumber: user.phone_number});
+        res.status(200).send({id: user._id, firstName: user.firstName,  lastName: user.lastName, email: user.email, phoneNumber: user.phoneNumber});
     }
 }
 
@@ -36,7 +36,7 @@ const updateUser = async (req, res) => {
     {
         const salt = await bcrypt.genSalt(10);
         const hashpassword = await bcrypt.hash(password, salt);
-        const user = await User.findByIdAndUpdate(id, {$set: {firstName: firstName, lastName: lastName, password: hashpassword, phone_number: phoneNumber}})
+        const user = await User.findByIdAndUpdate(id, {$set: {firstName: firstName, lastName: lastName, password: hashpassword, phoneNumber}})
         res.status(200).json(user);
     }
     else{
@@ -44,7 +44,7 @@ const updateUser = async (req, res) => {
           $set: {
             firstName: firstName,
             lastName: lastName,
-            phone_number: phoneNumber,
+            phoneNumber: phoneNumber,
           },
         });
         res.status(200).json(user);
