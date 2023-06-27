@@ -20,34 +20,34 @@ const createProduct = async (req, res) => {
     quantity,
     discountPercentage,
     price,
-    categoryID,
-    subcategoryID,
+    category,
+    subcategory,
     featured,
     topSeller,
   } = req.body;
 
   const product = await Product.create({
     name,
-    image,
+    image: req.file.originalname,
     quantity,
     discountPercentage,
     price,
-    categoryID,
-    subcategoryID,
+    category,
+    subcategory,
     featured,
     topSeller,
   });
 
-  const category = await Category.findByIdAndUpdate(categoryID, {
+  const cat = await Category.findByIdAndUpdate(category, {
     $push: { productList: product._id },
   });
 
-  const subcategory = await Subcategory.findByIdAndUpdate(subcategoryID, {
+  const subcat = await Subcategory.findByIdAndUpdate(subcategory, {
     $push: { productList: product._id },
   });
 
 
-  res.status(200).json(product);
+  res.status(200).json("Product Added Successfully");
   // const {categoryName, subcategoryName, categoryID, subcategoryID} = req.body;
 
   // const result = await Promise.all(data.map( async (product) => {
@@ -85,21 +85,30 @@ const createProduct = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  let product = await Product.findById(req.params.id);
+  product.category = await Category.findById(product.category);
+  product.subcategory = await Subcategory.findById(product.subcategory);
   res.status(200).json(product);
 };
 
 const updateProduct = async (req, res) => {
-  const { name, image } = req.body;
   const { id } = req.params;
-  const product = await Product.findOneAndUpdate(
+  const {product} = req.body
+  const response = await Product.findOneAndUpdate(
     { _id: id },
     {
-      name: name,
-      image: image,
+      name: product.name,
+      quantity: product.quantity,
+      discountPercentage: product.discountPercentage,
+      price: product.price,
+      category: product.category._id,
+      subcategory: product.subcategory._id,
+      featured: product.featured,
+      topSeller: product.topSeller,
+    
     }
   );
-  if (product) {
+  if (response) {
     res.status(200).send("Product updated Successfully");
   } else {
     res.status(404).send("Product not found. Updation Failed");
@@ -109,6 +118,13 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const product = await Product.findByIdAndDelete(req.params.id);
   if (product) {
+    const cat = await Category.findByIdAndUpdate(product.category, {
+      $pull: { productList: product._id },
+    });
+
+    const subcat = await Subcategory.findByIdAndUpdate(product.subcategory, {
+      $pull: { productList: product._id },
+    });
     res.status(200).send("Product deleted Successfully");
   } else {
     res.status(404).send("Product not found. Deletion Failed");
@@ -163,6 +179,8 @@ const searchProduct = async (req, res) => {
   const {query} = req.params;
   const products = await Product.find({name: {$regex: query, $options: 'i'}})
   res.status(200).json({query: query, products: products});
+
+  
 
 }
 

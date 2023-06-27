@@ -14,6 +14,12 @@ const RequestedProductSchema = new mongoose.Schema({
     image: {
         type: String,
         required: true
+    },
+
+    requestedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     }
 })
 
