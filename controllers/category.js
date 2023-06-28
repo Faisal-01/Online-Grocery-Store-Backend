@@ -8,19 +8,30 @@ const getAllCategories = async (req, res) => {
 };
 
 const createCategory = async (req, res) => {
-  const { name, image } = req.body;
+  const { name } = req.body;
+  const image = req.file.originalname;
+  
   const category = await Category.create({ name, image });
 
-  res.status(200).json(category);
+  res.status(200).json("Category Added Successfully");
 };
 
 const getCategory = async (req, res) => {
-  const category = await Category.findById(req.params.id);
+  let category = await Category.findById(req.params.id);
+  const subcategories = await Promise.all(category.subCategoryList?.map((sub) => {
+    return Subcategory.findById(sub);
+  }))
+  const products = await Promise.all(
+    category.productList?.map((product) => {
+      return Product.findById(product);
+    })
+  );
+  category = {...category._doc, productList: products, subCategoryList: subcategories}
   res.status(200).json(category);
 };
 
 const updateCategory = async (req, res) => {
-  const { name, image, subcategoryID } = req.body;
+  const { name, image, subcategoryID } = req.body.category;
   const { id } = req.params;
   const category = await Category.findOneAndUpdate(
     { _id: id },
@@ -79,6 +90,14 @@ const getProductsOfCategory = async (req, res) => {
 };
 
 
+const searchCategory = async (req, res) => {
+  const { query } = req.params;
+  const categories = await Category.find({
+    name: { $regex: query, $options: "i" },
+  });
+  res.status(200).json({ query: query, categories: categories });
+}
+
 module.exports = {
   getAllCategories,
   createCategory,
@@ -87,4 +106,5 @@ module.exports = {
   deleteCategory,
   subcategoriesOfCategories,
   getProductsOfCategory,
+  searchCategory
 };

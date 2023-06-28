@@ -15,12 +15,21 @@ const createSubcategory = async (req, res) => {
 };
 
 const getSubcategory = async (req, res) => {
-  const subcategory = await Subcategory.findById(req.params.id);
+  let subcategory = await Subcategory.findById(req.params.id);
+  const products = await Promise.all(
+    subcategory.productList?.map((product) => {
+      return Product.findById(product);
+    })
+  );
+  subcategory = {
+    ...subcategory._doc,
+    productList: products,
+  };
   res.status(200).json(subcategory);
 };
 
 const updateSubcategory = async (req, res) => {
-  const { name, image } = req.body;
+  const { name, image } = req.body.subcategory;
   const { id } = req.params;
   const subcategory = await Subcategory.findOneAndUpdate(
     { _id: id },
@@ -86,6 +95,15 @@ const getProductsOfSubcategory = async (req, res) => {
   res.status(200).json({name: subcategory.name,products: products});
 }
 
+
+const searchSubcategory = async (req, res) => {
+  const { query } = req.params;
+  const subcategories = await Subcategory.find({
+    name: { $regex: query, $options: "i" },
+  });
+  res.status(200).json({ query: query, subcategories: subcategories });
+};
+
 module.exports = {
   getAllSubcategories,
   createSubcategory,
@@ -95,4 +113,5 @@ module.exports = {
   deleteSubcategory,
   getProductsOfSubcategories,
   getProductsOfSubcategory,
+  searchSubcategory
 };
