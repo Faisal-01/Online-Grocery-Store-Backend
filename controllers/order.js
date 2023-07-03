@@ -27,13 +27,13 @@ const getOrder = async (req, res) => {
 const getOrdersOfUser = async (req, res) => {
   const { userId } = req.params;
   const user = await User.findById(userId);
+  
 
   let orders = await Promise.all(
     user.orderList.map((orderId) => {
       return Order.findById(orderId);
     })
   );
-
   orders = await Promise.all(
     orders.map(async (order) => {
       return {
@@ -70,14 +70,19 @@ const createOrder = async (req, res) => {
 };
 
 const updateOrder = async (req, res) => {
-  const order = await Order.findByIdAndUpdate(req.params.id, req.body);
-  res.status(200).json(order);
+  const order = await Order.findByIdAndUpdate(req.params.id, req.body.order);
+  console.log(req.body)
+  res.status(200).json("Order Updated Successfully");
 };
 
 const deleteOrder = async (req, res) => {
   const { id } = req.params;
+  const {userId} = req.body;
   const order = await Order.findByIdAndDelete(id);
-  res.status(200).json(order);
+  const user = await User.findByIdAndUpdate(userId, {
+    $pull: { orderList: order._id },
+  });
+  res.status(200).json("Order Deleted Successfully");
 };
 
 module.exports = {

@@ -8,6 +8,6 @@ router.get("/:id", getOrder);
 router.get("/user/:userId", getOrdersOfUser);
 router.post("/", createOrder);
 router.patch("/:id", updateOrder);
-router.delete("/:id", deleteOrder);
+router.patch("/delete/:id", deleteOrder);
 
 module.exports = router;
