@@ -24,6 +24,12 @@ const OrderSchema = new mongoose.Schema(
       required: true,
     },
 
+    method: {
+      type: String,
+      enum: ["COD", "Card"],
+      default: "COD"
+    },
+
     productList: [
       {
         productId: {

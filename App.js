@@ -9,6 +9,7 @@ const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const orderRouter = require("./routes/order");
 const requestedProductRouter = require("./routes/requestedProduct");
+const paymentRouter = require("./routes/payment");
 const connectDB = require("./db/database");
 const path = require("path");
 
@@ -36,6 +37,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/request", requestedProductRouter);
+app.use("/api/v1/payment", paymentRouter);
 
 app.use(notFound);
 app.use(error)

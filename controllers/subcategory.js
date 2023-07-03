@@ -8,10 +8,16 @@ const getAllSubcategories = async (req, res) => {
 };
 
 const createSubcategory = async (req, res) => {
-  const { name, image } = req.body;
+  console.log(req.body, req.file)
+  const { name, category } = req.body;
+  const image = req.file.originalname;
   const subcategory = await Subcategory.create({ name, image });
 
-  res.status(200).json(subcategory);
+  const cat = await Category.findByIdAndUpdate(category, {
+    $push: { subCategoryList: subcategory._id },
+  });
+
+  res.status(200).json("Subcategory Added Successfully");
 };
 
 const getSubcategory = async (req, res) => {

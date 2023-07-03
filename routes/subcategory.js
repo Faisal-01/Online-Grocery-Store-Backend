@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const {
   getAllSubcategories,
   createSubcategory,
@@ -12,8 +13,19 @@ const {
   searchSubcategory
 } = require("../controllers/Subcategory");
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/images/subcategories/"); // Set the destination folder for uploaded files
+  },
+  filename: (req, file, cb) => {
+    file.originalname = Date.now() + "-" + file.originalname;
+    cb(null, file.originalname); // Set a unique filename for the uploaded file
+  },
+});
+const upload = multer({ storage });
+
 router.get("/", getAllSubcategories);
-router.post("/", createSubcategory);
+router.post("/", upload.single("file"), createSubcategory);
 router.get("/all", getProductsOfSubcategories);
 router.get("/subcategories/:id", getSubcategoryOfCategory);
 router.get("/search/:query", searchSubcategory);

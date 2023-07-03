@@ -54,12 +54,13 @@ const getOrdersOfUser = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  const { orderBy, productList, orderAmount, shippingAddress } = req.body;
+  const { orderBy, productList, orderAmount, shippingAddress, method } = req.body;
   const order = await Order.create({
     orderBy,
     productList,
     orderAmount,
     shippingAddress,
+    method
   });
 
   const user = await User.findByIdAndUpdate(orderBy, {
