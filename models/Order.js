@@ -26,7 +26,7 @@ const OrderSchema = new mongoose.Schema(
 
     method: {
       type: String,
-      enum: ["COD", "Card"],
+      emun: ["COD", "Card"],
       default: "COD"
     },
 

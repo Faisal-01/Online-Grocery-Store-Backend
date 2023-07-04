@@ -8,13 +8,14 @@ const getAllOrders = async (req, res) => {
 };
 
 const getOrder = async (req, res) => {
+  // if(mongoose.mongoose.Types.ObjectId.isValid(req.params.id))
   let order = await Order.findById(req.params.id);
   order = {
-    ...order._doc,
+    ...order?._doc,
     productList: await Promise.all(
       order.productList.map(async (product) => {
         return {
-          ...product._doc,
+          ...product?._doc,
           product: await Product.findById(product.productId),
         };
       })
@@ -55,6 +56,7 @@ const getOrdersOfUser = async (req, res) => {
 
 const createOrder = async (req, res) => {
   const { orderBy, productList, orderAmount, shippingAddress, method } = req.body;
+  
   const order = await Order.create({
     orderBy,
     productList,
@@ -71,7 +73,6 @@ const createOrder = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   const order = await Order.findByIdAndUpdate(req.params.id, req.body.order);
-  console.log(req.body)
   res.status(200).json("Order Updated Successfully");
 };
 
