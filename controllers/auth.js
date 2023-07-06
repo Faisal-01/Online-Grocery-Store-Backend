@@ -29,12 +29,19 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
-
+  const isExist = await User.find({email: req.body.user.email});
+  if(isExist.length === 0){
+    
     const salt = await bcrypt.genSalt(10);
     const hashpassword = await bcrypt.hash(req.body.user.password, salt);
     req.body.user.password = hashpassword;
     const user = await User.create(req.body.user);
     res.status(200).json("User Registered Succesfully");
+  }
+  else{
+    res.status(400).json("User already exists with this email");
+  }
+
 
 };
 
